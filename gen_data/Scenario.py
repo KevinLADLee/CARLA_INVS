@@ -48,7 +48,7 @@ except IndexError:
     pass
 
 from agents.navigation.behavior_agent import BehaviorAgent  # pylint: disable=import-error
-from agents.navigation.roaming_agent import RoamingAgent  # pylint: disable=import-error
+# from agents.navigation.roaming_agent import RoamingAgent  # pylint: disable=import-error
 from agents.navigation.basic_agent import BasicAgent  # pylint: disable=import-error
 
 from utils.get2Dlabel import ClientSideBoundingBoxes
@@ -212,9 +212,9 @@ class Server(object):
     def __init__(self):
         pass
 
-class Vehicle_Agent(BehaviorAgent):
+class Vehicle_Agent(BasicAgent):
     def __init__(self, vehicle):
-        BehaviorAgent.__init__(self, vehicle)
+        BasicAgent.__init__(self, vehicle)
     
     def planning_ang_control(self):
         pass
@@ -351,6 +351,7 @@ class Scenario(object):
                                 # (carla.Transform(carla.Location(x=1.6, z=1.7)), Attachment.Rigid),
                                 (carla.Transform(carla.Location(x=0, z=2.5)), Attachment.Rigid)]
         self.args = args
+        self.sensor_relation = {}
         weak_self = weakref.ref(self)
         self.world.on_tick(lambda world_snapshot: self.on_world_tick(weak_self,world_snapshot))
 
@@ -492,6 +493,7 @@ class Scenario(object):
                 
                 if args.sync and self.synchronous_master:
                     time.sleep(1)
+                    print("run_step")
                     now = self.run_step()
                     if (now - start) % 1000 == 0:
                         print('Frame ID:'+str(now))
@@ -598,7 +600,7 @@ class Scenario(object):
                         self.sensor_relation[str(response.actor_id)] = tmp_sensor_id_list
                         random.shuffle(self.map.destination)
                         tmp_agent = Vehicle_Agent(vehicle)
-                        tmp_agent.set_destination(tmp_agent.vehicle.get_location(), self.map.destination[0].location, clean=True)
+                        tmp_agent.set_destination(tmp_agent._vehicle.get_location(), self.map.destination[0].location)
                         self.agent_list.append(tmp_agent)
         elif actor_type == 'sensor':
             # sensor agents

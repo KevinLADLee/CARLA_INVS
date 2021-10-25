@@ -2,7 +2,7 @@
 from pathlib import Path
 from os import chdir
 
-CARLA_PATH = Path('~/CARLA_0.9.10').expanduser() #Path('~/CARLA').expanduser()
+CARLA_PATH = Path('~/carla/CARLA_0.9.12').expanduser() #Path('~/CARLA').expanduser()
 ROOT_PATH  = Path(__file__).parent
 
 ##for gen_data
